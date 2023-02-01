@@ -1,0 +1,13 @@
+name: backend
+packages:
+  - path: config
+  - path: controllers
+  - path: middleware
+  - path: models
+  - path: routes
+language: javascript
+appmap_dir: tmp/appmap
+test_recording:
+  test_commands:
+    - env: {}
+      command: testtest
