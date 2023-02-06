@@ -13,7 +13,6 @@ const AddOrder = () => {
     const { auth } = useAuth()
     const [location, setLocation] = useState(null)
     const [ifAddNewLocation, setIfAddNewLocation] = useState(false)
-    const [address, setAddress] = useState('')
     const [abbrev, setAbbrev] = useState('')
     const [streetName, setStreetName] = useState('')
     const [buildingNumber, setBuildingNumber] = useState('')
@@ -23,7 +22,7 @@ const AddOrder = () => {
     const [desc, setDesc] = useState('')
     const [apartmentNumber, setApartmentNumber] = useState('')
 
-    const { data: locationData, isLoading: isLocationLoading, isError: isLocationError } = useQuery(["locations"], () => getLocations(axiosPrivate))
+    const { data: locationData } = useQuery(["locations"], () => getLocations(null, axiosPrivate))
 
     const addLocationMutation = useMutation(async (locationDocument) => addLocation(locationDocument, axiosPrivate), {
         onSuccess: (response) => {

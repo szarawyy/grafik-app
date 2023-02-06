@@ -7,11 +7,11 @@ const DashLayout = () => {
     const { auth } = useAuth()
     return (
         <>
-            <DashHeader />
+            <DashHeader roles={auth.roles}/>
             <div className="dash-container">
                 <Outlet />
             </div>
-            <DashFooter username={auth.user}/>
+            <DashFooter username={auth.user} roles={auth.roles}/>
         </>
     )
 }

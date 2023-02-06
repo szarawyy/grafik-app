@@ -71,7 +71,7 @@ const updateOrder = asyncHandler(async (req, res) => {
         return res.status(409).json({ message: 'Duplicate order' })
     }
 
-    if (term == null) {
+    if (term === null) {
         order.term = undefined
     }
 

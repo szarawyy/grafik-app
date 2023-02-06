@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-import useRefreshToken from "../hooks/useRefreshToken";
-import useAuth from "../hooks/useAuth";
+import { useState, useEffect } from "react";
+import useRefreshToken from "../../hooks/useRefreshToken";
+import useAuth from "../../hooks/useAuth";
 
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -25,12 +25,8 @@ const PersistLogin = () => {
         !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false)
 
         return () => isMounted = false
+        // eslint-disable-next-line
     }, [])
-
-    /* useEffect(() => {
-        console.log(`isLoading ${isLoading}`)
-        console.log(`at: ${JSON.stringify(auth?.accessToken)}`)
-    }, [isLoading]) */
 
     return (
         <>

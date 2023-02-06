@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 // @access Private
 const getAllLocations = asyncHandler(async (req, res) => {
     // Get all locations from MongoDB
-    const locations = await Location.find().lean().sort({abbrev:1})
+    const locations = await Location.find({...req.query}).lean().sort({abbrev:1})
 
     // If no locations 
     if (!locations?.length) {
@@ -51,12 +51,7 @@ const createNewLocation = asyncHandler(async (req, res) => {
 // @route PATCH /locations
 // @access Private
 const updateLocation = asyncHandler(async (req, res) => {
-    const { id, locationname, roles, password } = req.body
-
-    // Confirm data 
-    if (!id || !locationname || !Array.isArray(roles) || !roles.length) {
-        return res.status(400).json({ message: 'All fields except password are required' })
-    }
+    const { id, abbrev, description, address } = req.body
 
     // Does the location exist to update?
     const location = await Location.findById(id).exec()
@@ -66,24 +61,18 @@ const updateLocation = asyncHandler(async (req, res) => {
     }
 
     // Check for duplicate 
-    const duplicate = await Location.findOne({ locationname }).lean().exec()
+    const duplicate = await Location.findOne({ abbrev }).lean().exec()
 
     // Allow updates to the original location 
     if (duplicate && duplicate?._id.toString() !== id) {
         return res.status(409).json({ message: 'Duplicate locationname' })
     }
 
-    location.locationname = locationname
-    location.roles = roles
-
-    if (password) {
-        // Hash password 
-        location.password = await bcrypt.hash(password, 10) // salt rounds 
-    }
+    location.description = description
 
     const updatedLocation = await location.save()
 
-    res.json({ message: `${updatedLocation.locationname} updated` })
+    res.json({ message: `${updatedLocation.abbrev} updated` })
 })
 
 // @desc Delete a location

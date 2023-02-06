@@ -28,7 +28,7 @@ const EditOrder = () => {
         }
     })
 
-    const { data: locationData, isLoading: isLocationLoading, isError: isLocationError } = useQuery(["locations"], () => getLocations(axiosPrivate))
+    const { data: locationData, isLoading: isLocationLoading, isError: isLocationError } = useQuery(["locations"], () => getLocations(null, axiosPrivate))
 
     const deleteOrderMutation = useMutation(async (orderId) => deleteOrder( orderId, axiosPrivate ), {
         onSuccess: () => {

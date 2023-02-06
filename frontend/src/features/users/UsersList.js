@@ -1,23 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import { getUsers, addUser, deleteUser } from '../../api/usersApi'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 
 const UsersList = () => {
     const queryClient = useQueryClient()
     const axiosPrivate = useAxiosPrivate()
-
     const navigate = useNavigate()
-    const location = useLocation()
-
     const [newUser, setNewUser] = useState('')
 
 
-    const { data, isLoading, isError, error } = useQuery(["users"], () => getUsers(null, axiosPrivate))
+    const { data, isLoading, isError } = useQuery(["users"], () => getUsers(null, axiosPrivate))
 
     const addUserMutation = useMutation(async (userDocument) => addUser(userDocument, axiosPrivate), {
         onSuccess: () => {
@@ -46,35 +43,32 @@ const UsersList = () => {
         )
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        addUserMutation.mutate({ username: newUser, password: "123456", roles: ['employee'] })
-        setNewUser('')
-    }
-
-    const handleDelete = ( id ) => {
-        deleteUserMutation.mutate( id )
+    const handleDelete = (id) => {
+        deleteUserMutation.mutate(id)
     }
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <label>Enter a new user</label>
-                <div>
-                    <input
-                        type="text"
-                        value={newUser}
-                        onChange={(e) => setNewUser(e.target.value)}
-                        placeholder="Enter new user"
-                    />
-                </div>
-                <button>ADD</button>
-            </form>
-
-            <h1>Users List</h1>
-            <ul>
-                {data.map((user, i) => <li key={i}>{i + 1}. {user.username}<button onClick={() => handleDelete({ id: user._id })/* () => deleteUserMutation.mutate({ id: user._id }) */}>DELETE</button></li>)}
-            </ul>
+            <h1>Lista użytkowników</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Użytkownik</th><th>Imię i nazwisko</th><th>Rola</th><th>
+                            <button onClick={() => navigate('/dash/users/add')} className="dash-footer__button icon-button"><FontAwesomeIcon icon={faPlus} /></button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((user, i) => <tr key={user._id}>
+                        <td>{user.username}</td>
+                        <td>{[user?.name?.fName, ' ', user?.name?.lName]}</td>
+                        <td><ul>{user.roles.map((role) => <li>{role}</li>)}</ul></td>
+                        <td><button onClick={() => handleDelete({ id: user._id })} className="dash-footer__button icon-button">
+                            <FontAwesomeIcon icon={faTrash} />
+                        </button></td>
+                    </tr>)}
+                </tbody>
+            </table>
         </div>
     )
 }

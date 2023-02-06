@@ -1,5 +1,4 @@
 import axios from './axios'
-import { axiosPrivate } from '../api/axios'
 
 const usersApi = axios.create({
     baseURL: "http://localhost:3500"

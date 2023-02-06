@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { getTerms, addTerm, deleteTerm, getTermsByDate } from '../../api/termsApi'
+import { addTerm, deleteTerm, getTermsByDate } from '../../api/termsApi'
 import { getUsers } from '../../api/usersApi'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 
@@ -13,7 +13,7 @@ const TermsList = () => {
     const [user, setUser] = useState(null)
 
 
-    const { data: termData, isError: isTermError, refetch: refetchTerms } = useQuery(["terms", date, user?._id], () => getTermsByDate(date, axiosPrivate))
+    const { data: termData } = useQuery(["terms", date, user?._id], () => getTermsByDate(date, axiosPrivate))
 
     const { data: userData } = useQuery(["users"], () => getUsers(null, axiosPrivate, { roles: ["fitter"] }))
 
@@ -109,7 +109,7 @@ const TermsList = () => {
                 <button onClick={handleSubmit}>Dodaj</button>
             </form>
             <ul>
-                {termData?.map((term) => <li key={term._id}>{[new Date(term.date).toLocaleString(), " ", term.user.username]}<button onClick={() => handleDelete({ id: term._id })}>DELETE</button></li>)}
+                {termData?.map((term) => <li key={term._id}>{[new Date(term.date).toLocaleString(), " ", term.user.username, " ",]}<button onClick={() => handleDelete({ id: term._id })}>Usuń</button></li>)}
             </ul>
         </section>
     )

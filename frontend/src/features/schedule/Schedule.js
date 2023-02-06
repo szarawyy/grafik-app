@@ -21,9 +21,9 @@ const Schedule = () => {
 
     const { data: usersData } = useQuery(["fitters"], () => getUsers(auth.roles.includes('fitter') ? auth.user : null, axiosPrivate, { roles: ['fitter'] }))
 
-    const { data: termsByDayData, isError: isTermsByDateError, refetch: refetchTerms } = useQuery(["terms", date], () => getTermsByDate(date, axiosPrivate))
+    const { data: termsByDayData, isError: isTermsByDateError, refetch: refetchTerms } = useQuery(["terms", date], () => getTermsByDate(date, axiosPrivate), { retry: false })
 
-    const { data: ordersData, isError: isOrderError, refetch: refetchOrders } = useQuery(["orders"], () => getOrders(null, axiosPrivate))
+    const { data: ordersData, refetch: refetchOrders } = useQuery(["orders"], () => getOrders(null, axiosPrivate))
 
     const hoursList = [...new Set(termsByDayData?.map((term) => term.date))].sort()
 
@@ -88,13 +88,12 @@ const Schedule = () => {
                 />
             </span>
 
-            {isTermsByDateError && <p>Not found</p>}
-            {date &&
+            { isTermsByDateError && <><br/><br/><h2>Brak terminów dla podanej daty</h2><br/></> ||
                 <table>
 
                     <thead>
                         <tr>
-                            <th><button className="dash-footer__button icon-button" onClick={() => refetchOrders()}><FontAwesomeIcon icon={faRefresh}/></button></th>
+                            <th><button className="dash-footer__button icon-button" onClick={() => refetchOrders()}><FontAwesomeIcon icon={faRefresh} /></button></th>
                             {usersData?.map((user, i) => <th key={i}>{user?.username}</th>)}
                         </tr>
                     </thead>
@@ -104,7 +103,7 @@ const Schedule = () => {
                             {ordersInSchedule[hoursList.indexOf(hour)]?.map((order, i) =>
                                 <td key={i}>
                                     {order?.term ?
-                                        <span><Link to={`/dash/orders/${auth.roles.includes('fitter') ? order._id : `edit/${order._id}`}`}>{[order?.location?.abbrev, order.apartmentNumber ? "/" : "", order.apartmentNumber]}</Link> {ifUnassignMode ? <button className="dash-footer__button icon-button" onClick={() => unassignOrder(order)}><FontAwesomeIcon icon={faCalendarMinus} /></button> : ''}</span>
+                                        <span><Link to={`/dash/orders/${auth.roles.includes('admin') || auth.roles.includes('editor') ? `edit/${order._id}` : order._id}`}>{[order?.location?.abbrev, order.apartmentNumber ? "/" : "", order.apartmentNumber]}</Link> {ifUnassignMode ? <button className="dash-footer__button icon-button" onClick={() => unassignOrder(order)}><FontAwesomeIcon icon={faCalendarMinus} /></button> : ''}</span>
                                         : order?.status === 'available' ?
                                             ifAssignMode ? <button className="dash-footer__button icon-button" onClick={() => assignOrder(order)}><FontAwesomeIcon icon={faPlus} /></button> : ''
                                             : <FontAwesomeIcon icon={faX} />
@@ -114,27 +113,37 @@ const Schedule = () => {
                     </tbody>
                 </table>
             }
-
+            
             {!auth.roles.includes('fitter') && <div>
                 <h2>Zlecenia do umówienia</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>Nr</th><th>Skrót</th><th>Adres</th><th><Link to='/dash/orders/add'><FontAwesomeIcon icon={faPlus} /></Link></th><th><button className="dash-footer__button icon-button" onClick={() => toogleUnassignMode()}><FontAwesomeIcon icon={faCalendarMinus} /></button></th>
+                            <th>Nr</th><th>Skrót</th><th>Adres</th>
+                            <th>
+                                {(auth.roles.includes('admin') || auth.roles.includes('editor')) && <Link to='/dash/orders/add'><FontAwesomeIcon icon={faPlus} /></Link>}
+                            </th>
+                            {(auth.roles.includes('admin') || auth.roles.includes('editor')) && <><th><button className="dash-footer__button icon-button" onClick={() => toogleUnassignMode()}><FontAwesomeIcon icon={faCalendarMinus} /></button></th></>}
                         </tr>
                     </thead>
                     <tbody>
                         {ordersData?.filter(order => (order.term === null || order.term === undefined)).map((order) => <tr key={order._id}>
                             <td>{order.ticket}</td><td>{[order.location.abbrev, order.apartmentNumber ? "/" : "", order.apartmentNumber]}</td><td>{[order.location.address.streetName, " ", order.location.address.buildingNumber, order.apartmentNumber ? "/" : "", order.apartmentNumber]}</td>
-                            <td><Link to={`/dash/orders/edit/${order._id}`}><FontAwesomeIcon icon={faBars} /></Link></td>
                             <td>
-                                <button
-                                    className="dash-footer__button icon-button"
-                                    onClick={() => chooseOrder(order)}
-                                >
-                                    <FontAwesomeIcon icon={faCalendarPlus} />
-                                </button>
+                                {(auth.roles.includes('admin') || auth.roles.includes('editor')) ?
+                                    <Link to={`/dash/orders/edit/${order._id}`}><FontAwesomeIcon icon={faBars} /></Link>
+                                    : <Link to={`/dash/orders/${order._id}`}><FontAwesomeIcon icon={faBars} /></Link>}
                             </td>
+                            {(auth.roles.includes('admin') || auth.roles.includes('editor')) && <>
+                                <td>
+                                    <button
+                                        className="dash-footer__button icon-button"
+                                        onClick={() => chooseOrder(order)}
+                                    >
+                                        <FontAwesomeIcon icon={faCalendarPlus} />
+                                    </button>
+                                </td>
+                            </>}
                         </tr>)}
                     </tbody>
                 </table>

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import useAuth from '../../hooks/useAuth'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import jwt_decode from "jwt-decode"
 
 import axios from '../../api/axios'
@@ -10,8 +10,6 @@ const Login = () => {
   const { setAuth } = useAuth()
 
   const navigate = useNavigate()
-  const location = useLocation()
-  const from = location.state?.from?.pathname || '/'
 
   const userRef = useRef()
   const errRef = useRef()
@@ -22,7 +20,6 @@ const Login = () => {
 
   useEffect(() => {
     userRef.current.focus()
-    console.log("from", from)
   }, [])
 
   useEffect(() => {
@@ -46,7 +43,7 @@ const Login = () => {
       setAuth({ user, roles, accessToken })
       setUser('')
       setPwd('')
-      navigate('/dash', { replace: true })
+      navigate('/dash/schedule', { replace: true })
     } catch (err) {
       if (!err?.response) {
         setErrMsg('No Server Response')
@@ -66,7 +63,7 @@ const Login = () => {
       <p ref={errRef}>{errMsg}</p>
       <h1>Logowanie</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username: </label>
+        <label htmlFor="username">Login: </label>
         <input
           type="text"
           id="username"
@@ -76,7 +73,7 @@ const Login = () => {
           value={user}
           required
         /><br />
-        <label htmlFor="password">Password: </label>
+        <label htmlFor="password">Hasło: </label>
         <input
           type="password"
           id="password"

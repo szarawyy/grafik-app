@@ -18,7 +18,7 @@ const OrdersList = () => {
 
     const { data: orderData, isError: isOrderError } = useQuery(["orders"], () => getOrders(null, axiosPrivate))
 
-    const { data: locationData } = useQuery(["locations"], () => getLocations(axiosPrivate))
+    const { data: locationData } = useQuery(["locations"], () => getLocations(null, axiosPrivate))
 
     const { data: termData } = useQuery(["terms"], () => getTerms(null,null,null,axiosPrivate))
 

@@ -17,7 +17,7 @@ const DashFooter = (props) => {
     const onGoHomeClicked = () => navigate('/dash')
 
     let goHomeButton = null
-    if (pathname !== '/dash') {
+    if (pathname !== '/dash' && (props.roles?.includes('admin') || props.roles?.includes('editor'))) {
         goHomeButton = (
             <button
                 className="dash-footer__button icon-button"
