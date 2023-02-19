@@ -50,7 +50,7 @@ const AddOrder = () => {
                 />
                 <label htmlFor="buildingNumber">Numer budynku: </label>
                 <input
-                    placeholder="Ulica"
+                    placeholder="Numer budynku"
                     type="text"
                     id="buildingNumber"
                     onChange={(e) => setBuildingNumber(e.target.value)}

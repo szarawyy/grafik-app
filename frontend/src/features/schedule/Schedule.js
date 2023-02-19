@@ -65,13 +65,11 @@ const Schedule = () => {
     }
 
     const chooseOrder = (order) => {
-        console.log(order)
         setIfAssignMode(!ifAssignMode)
         setChoosenOrder(order)
     }
 
     const assignOrder = (term) => {
-        console.log("You try to assign ", choosenOrder.location.abbrev, " to ", term.date)
         updateOrderMutation.mutate({ id: choosenOrder._id, modifiedBy: auth.user, term: term })
         setIfAssignMode(!ifAssignMode)
     }
@@ -88,7 +86,7 @@ const Schedule = () => {
                 />
             </span>
 
-            { isTermsByDateError && <><br/><br/><h2>Brak terminów dla podanej daty</h2><br/></> ||
+            { (isTermsByDateError && <><br/><br/><h2>Brak terminów dla podanej daty</h2><br/></>) ||
                 <table>
 
                     <thead>

@@ -5,6 +5,7 @@ const asyncHandler = require('express-async-handler')
 // @route GET /orders
 // @access Private
 const getAllOrders = asyncHandler(async (req, res) => {
+    
     // Get all orders from MongoDB
     const orders = await Order.find({...req.query}).lean().populate(['location', 'term'])
     
@@ -20,7 +21,6 @@ const getAllOrders = asyncHandler(async (req, res) => {
 // @access Private
 const createNewOrder = asyncHandler(async (req, res) => {
     const { location, description, term, apartmentNumber, modifiedBy } = req.body
-    console.log("location", location, "description",description, "term",term, "apartmentNumber",apartmentNumber)
     // Confirm data
     if (!location) {
         return res.status(400).json({ message: 'Location is required' })
@@ -38,7 +38,7 @@ const createNewOrder = asyncHandler(async (req, res) => {
     // Create and store new order 
     const order = await Order.create(orderObject)
 
-    if (order) { //created 
+    if (order) { 
         res.status(201).json({ message: `New order at ${location} created` })
     } else {
         res.status(400).json({ message: 'Invalid order data received' })
@@ -90,7 +90,6 @@ const updateOrder = asyncHandler(async (req, res) => {
 // @access Private
 const deleteOrder = asyncHandler(async (req, res) => {
     const { id } = req.body
-    console.log(id)
     // Confirm data
     if (!id) {
         return res.status(400).json({ message: 'Order ID Required' })

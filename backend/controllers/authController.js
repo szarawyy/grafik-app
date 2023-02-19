@@ -19,7 +19,6 @@ const login = asyncHandler(async (req, res) => {
     }
 
     const match = await bcrypt.compare(password, foundUser.password)
-    console.log(match)
     if (!match) return res.status(401).json({ message: 'Unauthorized' })
 
     const accessToken = jwt.sign(
@@ -41,10 +40,10 @@ const login = asyncHandler(async (req, res) => {
 
     // Create secure cookie with refresh token 
     res.cookie('jwt', refreshToken, {
-        httpOnly: true, //accessible only by web server 
-        secure: true, //https
+        httpOnly: true,
+        secure: true,
         sameSite: 'None', //cross-site cookie 
-        maxAge: 7 * 24 * 60 * 60 * 1000 //cookie expiry: set to match rT
+        maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
     // Send accessToken containing username and roles
@@ -53,7 +52,7 @@ const login = asyncHandler(async (req, res) => {
 
 // @desc Refresh
 // @route GET /auth/refresh
-// @access Public - because access token has expired
+// @access Public
 const refresh = (req, res) => {
     
     const cookies = req.cookies
@@ -90,7 +89,7 @@ const refresh = (req, res) => {
 
 // @desc Logout
 // @route POST /auth/logout
-// @access Public - just to clear cookie if exists
+// @access Public
 const logout = (req, res) => {
     const cookies = req.cookies
     if (!cookies?.jwt) return res.sendStatus(204) //No content

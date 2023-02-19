@@ -32,7 +32,7 @@ const DashFooter = (props) => {
     const content = (
         <footer className="dash-footer">
             {goHomeButton}
-            <p>Current User: {props.username}</p>
+            <p>Zalogowano: {props.username}</p>
             <button
                 className="dash-footer__button icon-button"
                 onClick={signOut}>

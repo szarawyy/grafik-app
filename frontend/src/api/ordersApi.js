@@ -19,7 +19,6 @@ export const addOrder = async (order, axiosApi) => {
 }
 
 export const updateOrder = async (order, axiosApi) => {
-    console.log(order)
     return await axiosApi.patch('/orders', order)
 }
 

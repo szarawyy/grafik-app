@@ -96,9 +96,9 @@ const EditOrder = () => {
                         onChange={(e) => setApartmentNumber(e.target.value)}
                         placeholder="Enter apartment number"
                     />
-                    <button>Save</button>
+                    <button>Zapisz</button>
                 </form>
-                <button onClick={() => handleDelete()}>Delete</button>
+                <button onClick={() => handleDelete()}>Usuń</button>
                 <h1>{location?.abbrev}</h1>
                 <p>{['Zmodyfikowano ', new Date(data[0].modifiedAt).toLocaleString(), ' przez ', data[0].modifiedBy]}</p>
             </div>)

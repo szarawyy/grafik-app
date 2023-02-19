@@ -11,17 +11,8 @@ const UsersList = () => {
     const queryClient = useQueryClient()
     const axiosPrivate = useAxiosPrivate()
     const navigate = useNavigate()
-    const [newUser, setNewUser] = useState('')
-
 
     const { data, isLoading, isError } = useQuery(["users"], () => getUsers(null, axiosPrivate))
-
-    const addUserMutation = useMutation(async (userDocument) => addUser(userDocument, axiosPrivate), {
-        onSuccess: () => {
-            // Invalidates cache and refetch 
-            queryClient.invalidateQueries("users")
-        }
-    })
 
     const deleteUserMutation = useMutation(async (userId) => deleteUser(userId, axiosPrivate), {
         onSuccess: () => {

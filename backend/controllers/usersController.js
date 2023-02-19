@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 // @route GET /users
 // @access Private
 const getAllUsers = asyncHandler(async (req, res) => {
+
     const { username, roles } = req.query
     let filter = {}
 
@@ -48,14 +49,14 @@ const createNewUser = asyncHandler(async (req, res) => {
     }
 
     // Hash password 
-    const hashedPwd = await bcrypt.hash(password, 10) // salt rounds
+    const hashedPwd = await bcrypt.hash(password, 10)
 
     const userObject = { username, "password": hashedPwd, roles, name }
 
     // Create and store new user 
     const user = await User.create(userObject)
 
-    if (user) { //created 
+    if (user) {
         res.status(201).json({ message: `New user ${username} created` })
     } else {
         res.status(400).json({ message: 'Invalid user data received' })

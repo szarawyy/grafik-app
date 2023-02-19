@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt')
 // @route GET /terms
 // @access Private
 const getAllTerms = asyncHandler(async (req, res) => {
-    
 
     // Get all terms from MongoDB
     const terms = await Term.find({...req.query}).lean().populate('user', '-password').sort({date:1})
@@ -20,7 +19,7 @@ const getAllTerms = asyncHandler(async (req, res) => {
 })
 
 const getDateTerms = asyncHandler(async (req, res) => {
-    
+
     // Get all terms from MongoDB
     const dateStartFilter = new Date(req.query.date)
     dateStartFilter.setHours(0,0,0,0)
@@ -41,7 +40,6 @@ const getDateTerms = asyncHandler(async (req, res) => {
 // @access Private
 const createNewTerm = asyncHandler(async (req, res) => {
     const { date,  user, status } = req.body
-    console.log(date, user, status)
     // Confirm data
     if (!date || !user ) {
         return res.status(400).json({ message: 'All fields are required' })
@@ -108,7 +106,6 @@ const updateTerm = asyncHandler(async (req, res) => {
 // @access Private
 const deleteTerm = asyncHandler(async (req, res) => {
     const { id } = req.body
-    console.log(req.body)
     // Confirm data
     if (!id) {
         return res.status(400).json({ message: 'Term ID Required' })

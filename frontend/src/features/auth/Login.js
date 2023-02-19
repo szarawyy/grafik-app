@@ -46,13 +46,13 @@ const Login = () => {
       navigate('/dash/schedule', { replace: true })
     } catch (err) {
       if (!err?.response) {
-        setErrMsg('No Server Response')
+        setErrMsg('Serwer tymczasowo niedostępny. Spróbuj później.')
       } else if (err?.response?.status === 400) {
-        setErrMsg('Missing username or password')
+        setErrMsg('Nie podano loginu lub hasła.')
       } else if (err?.response?.status === 401) {
-        setErrMsg('Unauthorized')
+        setErrMsg('Podano błędny login lub hasło.')
       } else {
-        setErrMsg('Login Failed')
+        setErrMsg('Logowanie nie powiodło się.')
       }
       errRef.current.focus()
     }

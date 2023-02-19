@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt')
 // @route GET /locations
 // @access Private
 const getAllLocations = asyncHandler(async (req, res) => {
+    
     // Get all locations from MongoDB
     const locations = await Location.find({...req.query}).lean().sort({abbrev:1})
 
@@ -28,7 +29,7 @@ const createNewLocation = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
-    // Check for duplicate locationname
+    // Check for duplicate location abbreviation
     const duplicate = await Location.findOne({ abbrev }).lean().exec()
 
     if (duplicate) {

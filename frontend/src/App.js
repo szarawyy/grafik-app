@@ -1,4 +1,3 @@
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Routes, Route } from 'react-router-dom'
 import RequireAuth from './features/auth/RequireAuth'
@@ -20,7 +19,6 @@ import ViewOrder from './features/orders/ViewOrder'
 import EditOrder from './features/orders/EditOrder'
 import Unauthorized from './features/auth/Unauthorized'
 
-
 function App() {
 
   const client = new QueryClient({
@@ -33,7 +31,6 @@ function App() {
 
   return (
     <QueryClientProvider client={client}>
-      <ReactQueryDevtools initialIsOpen={false} />
       <Routes>
         <Route path="/" element={<Layout />}>
 

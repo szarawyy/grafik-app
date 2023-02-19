@@ -10,8 +10,6 @@ const useRefreshToken = () => {
             withCredentials: true
         })
         setAuth(prev => {
-            console.log(JSON.stringify(prev))
-            console.log(response.data.accessToken)
             return { 
                 ...prev,
                 user: jwt_decode(response.data.accessToken).UserInfo.username,

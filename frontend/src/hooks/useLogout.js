@@ -1,4 +1,3 @@
-//import axiosPrivate from '../api/axios'
 import useAuth from './useAuth'
 import useAxiosPrivate from './useAxiosPrivate'
 
